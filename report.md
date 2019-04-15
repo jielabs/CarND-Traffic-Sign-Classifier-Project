@@ -101,12 +101,12 @@ The final model consisted of the following layers:
 | RELU					|												|
 | Max pooling	      	| 2x2 stride, same padding, outputs 5x5x16  	|
 | Fully connected		| Flatten and connect to 120 nodes. outputs 120 |
-| Softmax				| etc.        									|
 | RELU					|												|
 | Fully connected		| Fully connect to 84 nodes. outputs 84			|
 | RELU					|												|
 | Dropout				| Dropout with keep_ratio 0.5					|
 | Logits				| Fully connect to 43 output nodes. outputs 43	|
+| Softmax				|         										|
 
 This model is very similar as the LeNet we implemented in the course lab. The only differences are:
    * Input RGB with 3 bands instead 1-band gray images.
@@ -124,7 +124,7 @@ To train the model, I used the following setup:
 
 My final model results were:
 * training set accuracy of 0.998
-* validation set accuracy of 0.951 
+* validation set accuracy of **0.951**
 * test set accuracy of 0.928
 
 Notes from the development:
@@ -165,28 +165,29 @@ Here are the results of the prediction:
 
 ![prediction on new images][image9]
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Speed limit (50km/h)	| Slippery road   								| 
-| No passing     		| No passing 									|
-| No entry				| No entry										|
-| General caution	    | General caution				 				|
-| Slippery Road			| Slippery Road      							|
-| Wild animals crossing | Wild animals crossing 						|
-| Turn left ahead 		| Turn left ahead       						|
-| Roundabout mandatory 	| Roundabout mandatory      					|
+| Image			        |     Prediction	        					| Correct? | 
+|:---------------------:|:---------------------------------------------:|:--------:|  
+| Speed limit (50km/h)	| Slippery road   								|    No    |
+| No passing     		| No passing 									|   Yes    |
+| No entry				| No entry										|   Yes    |
+| General caution	    | General caution				 				|   Yes    |
+| Slippery Road			| Slippery Road      							|   Yes    |
+| Wild animals crossing | Wild animals crossing 						|   Yes    |
+| Turn left ahead 		| Turn left ahead       						|   Yes    |
+| Roundabout mandatory 	| Roundabout mandatory      					|   Yes    |
 
 
 The model was able to correctly guess 7 of the 8 traffic signs, which gives an accuracy of 87.5%. Only the first image was misclassified. As I mentioned, it is not really a German sign, so I guess the model depends a lot on the shape of the sign board (round vs. sqaure makes big differnece).
 
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability.
 
 The code for making predictions on my final model is located in the second to the last cell of the Ipython notebook.
 
 To my surprise, the top 5 softmax results are all the same: [1, 0, 0, 0, 0]! 
 
 ```
-TopKV2(values=array([[ 1.,  0.,  0.,  0.,  0.],
+TopKV2(values=array([
+       [ 1.,  0.,  0.,  0.,  0.],
        [ 1.,  0.,  0.,  0.,  0.],
        [ 1.,  0.,  0.,  0.,  0.],
        [ 1.,  0.,  0.,  0.,  0.],
@@ -206,7 +207,8 @@ TopKV2(values=array([[ 1.,  0.,  0.,  0.,  0.],
 To check what's going on, I also print the top 5 logits, and now I can see the difference:
 
 ```
-TopKV2(values=array([[   843.19311523,    254.91714478,     14.66727829,  -1485.24060059,
+TopKV2(values=array([
+       [   843.19311523,    254.91714478,     14.66727829,  -1485.24060059,
          -1655.02880859],
        [ 12349.40722656,  -2805.61938477,  -3848.00415039,  -4046.9140625 ,
          -5570.66015625],
@@ -231,7 +233,7 @@ TopKV2(values=array([[   843.19311523,    254.91714478,     14.66727829,  -1485.
        [40, 32, 16,  1, 11]], dtype=int32))
 ```
 
-The problem is the values of logits are already too big, so the softmax pushes the values to extreme (either very close to 1 or 0). I guess the problem is the weights in the nets (especially the fully connected layers) are too large. One solution is to use L2 regularization on the weights for the optimization to shrink the weights. But due to the time limit, I didn't try this idea yet.
+The problem is the values of logits are already too big, so the softmax pushes the values to extreme (either very close to 1 or 0). I guess the problem is the weights in the nets (especially the fully connected layers) are too large. One possible solution is to use L2 regularization on the weights for the optimization to shrink the weights.
 
 
 
