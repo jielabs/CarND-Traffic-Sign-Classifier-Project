@@ -52,7 +52,7 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 
 ![Distribution of classes][image1]
 
-To exam the distrubtion of the classes distribution cross different data sets (training, test, validation), I show them in a histogram, and it seems all the classes are evenly distributed cross all the data sets.
+To examine the distribution of the classes distribution across different data sets (training, test, validation), I show them in a histogram, and it seems all the classes are evenly distributed across all the data sets.
 
 ![Histogram of classes][image2]
 
@@ -79,11 +79,11 @@ Before adjusting the contrast:
 After adjusting the contrast:
 ![After adjusting the contrast][image6]
 
-It will aslo change the distribution of the pixel values. 
+It will also change the distribution of the pixel values. 
 
 ![Pixel histogram after adjusting the contrast][image7]
 
-However, the results didn't actually improve the model acturacy significantly, and it has some extra costs, such as I need to tune the clip_limit and it has to be applied to new images as well. To make the model more general, I still keep the original images without enhancement, and hope the model can generalize well for images with all kinds of exposure conditions.
+However, the results didn't actually improve the model accuracy significantly, and it has some extra costs, such as I need to tune the clip_limit and it has to be applied to new images as well. To make the model more general, I still keep the original images without enhancement, and hope the model can generalize well for images with all kinds of exposure conditions.
 
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) 
@@ -108,7 +108,7 @@ The final model consisted of the following layers:
 | Logits				| Fully connect to 43 output nodes. outputs 43	|
 | Softmax				|         										|
 
-This model is very similar as the LeNet we implemented in the course lab. The only differences are:
+This model is very similar to the LeNet we implemented in the course lab. The only differences are:
    * Input RGB with 3 bands instead 1-band gray images.
    * Add a dropout at the last layer before logits.
 
@@ -117,7 +117,7 @@ This model is very similar as the LeNet we implemented in the course lab. The on
 To train the model, I used the following setup:
    * optimizer: Adam
    * batch size: 128 
-   * number of epoches: 100
+   * number of epochs: 100
    * learning rate: 0.001 (I also tuned a few, and 0.001 can converge in a reasonable speed without loss of too much accuracy)
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. 
@@ -129,7 +129,7 @@ My final model results were:
 
 Notes from the development:
 * What was the first architecture that was tried and why was it chosen?
-  * The first model doesn't have any regulariztion method, i.e., no dropout layer.
+  * The first model doesn't have any regularization method, i.e., no dropout layer.
 
 * What were some problems with the initial architecture?
   * The first model has very strong overfitting on the training data, and the validation set cannot achieve 0.93 accuracy, although it converges much faster.
@@ -139,9 +139,9 @@ Notes from the development:
 
 * Which parameters were tuned? How were they adjusted and why?
   * I tuned batch size (64, 128, 256), and it didn't change too much.
-  * I tuned number of epoches. It become pretty stable after 50 epoches, but to be consistent over different experiments, I used 100 epoches.
+  * I tuned number of epochs. It became pretty stable after 50 epoches, but to be consistent over different experiments, I used 100 epoches.
   * I also tuned the learning rate, such as 0.01, 0.001 and 0.0001. The smaller, the longer to run. If the learning rate is too big, the performance is not very stable. I found 0.001 is a good choice for both accuracy and speed.
-  * I considered to change the kernal size of the convolution layers, but didn't really do it because 5x5 seems good enough now.
+  * I considered to change the kernel size of the convolution layers, but didn't really do it because 5x5 seems good enough now.
 
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
   * Convolution layer work well because it can capture important spatial features of the signs. Dropout layer can help because it reduces the overfitting.
@@ -177,7 +177,7 @@ Here are the results of the prediction:
 | Roundabout mandatory 	| Roundabout mandatory      					|   Yes    |
 
 
-The model was able to correctly guess 7 of the 8 traffic signs, which gives an accuracy of 87.5%. Only the first image was misclassified. As I mentioned, it is not really a German sign, so I guess the model depends a lot on the shape of the sign board (round vs. sqaure makes big differnece).
+The model was able to correctly guess 7 of the 8 traffic signs, which gives an accuracy of 87.5%. Only the first image was misclassified. As I mentioned, it is not really a German sign, so I guess the model depends a lot on the shape of the sign board (round vs. square makes a big difference).
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability.
 
@@ -234,6 +234,7 @@ TopKV2(values=array([
 ```
 
 The problem is the values of logits are already too big, so the softmax pushes the values to extreme (either very close to 1 or 0). I guess the problem is the weights in the nets (especially the fully connected layers) are too large. One possible solution is to use L2 regularization on the weights for the optimization to shrink the weights.
+
 
 
 
